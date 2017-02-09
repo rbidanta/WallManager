@@ -9,5 +9,6 @@ public class WallManMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall_man_main);
+        System.out.print("Lab");
     }
 }
