@@ -15,11 +15,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AddWallpaper extends AppCompatActivity {
 
@@ -31,7 +36,8 @@ public class AddWallpaper extends AppCompatActivity {
         //Bitmap image= imageView.getDrawingCache();
 
         Intent intent = getIntent();
-        Uri imageURI  = null;
+        ArrayList<String> imageURIList  = null;
+        ArrayList<ImageView> imageViewList = null;
 
         //getIntent().getStringExtra(WallManMain.IMAGE_URI);
 
@@ -40,31 +46,45 @@ public class AddWallpaper extends AppCompatActivity {
         try {
             if(extras != null){
 
-                imageURI = Uri.parse(extras.getString(WallManMain.IMAGE_URI));
+                imageURIList = intent.getStringArrayListExtra(WallManMain.IMAGE_URI_LIST);
 
                 if(checkPermissionREAD_EXTERNAL_STORAGE(this)) {
 
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageURI);
-                    ImageView imageView = new ImageView(this);
+                    imageViewList = new ArrayList<ImageView>();
 
-                    imageView.setImageBitmap(bitmap);
+                    for(int i=0;i<imageURIList.size();i++) {
 
-                    ViewGroup layout = (ViewGroup) findViewById(R.id.activity_add_wallpaper);
-                    layout.addView(imageView);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(imageURIList.get(i)));
+                        ImageView imageView = new ImageView(this);
+
+                        imageView.setImageBitmap(bitmap);
+                        imageView.setLayoutParams(new GridView.LayoutParams(160, 160));
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        imageView.setPadding(8, 8, 8, 8);
+                        imageViewList.add(imageView);
+
+                        //ViewGroup layout = (ViewGroup) findViewById(R.id.activity_add_wallpaper);
+                        //layout.addView(imageView);
+                    }
+
+                    GridView imageGridView = (GridView)findViewById(R.id.imagesgridview);
+                    imageGridView.setAdapter(new ImageViewAdaptor(this,imageViewList));
+
+                    imageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> parent, View v,
+                                                int position, long id) {
+                            Toast.makeText(AddWallpaper.this, "" + position,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
                 }
-
-
-
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
 
     }
 
