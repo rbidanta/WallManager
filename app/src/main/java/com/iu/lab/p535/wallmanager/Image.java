@@ -1,6 +1,6 @@
 package com.iu.lab.p535.wallmanager;
 /**
- * Created by tanmay on 25/01/17.
+ * Created by jaidev on 02/19/17.
  */
 public class Image {
 

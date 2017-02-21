@@ -33,14 +33,15 @@
         android:onClick="removeImages" />
 
     <Button
-        android:text="@string/settings"
+        android:text="@string/scheduler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
         android:layout_alignEnd="@+id/button2"
         android:layout_marginTop="45dp"
         android:id="@+id/button4"
-        android:layout_alignStart="@+id/button2" />
+        android:layout_alignStart="@+id/button2"
+        android:onClick="onClickScheduler" />
 
     <ImageView
         android:layout_width="wrap_content"

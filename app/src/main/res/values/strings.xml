@@ -2,5 +2,5 @@
     <string name="app_name">Wall Manager</string>
     <string name="addimages">ADD WALLPAPER</string>
     <string name="takepic">REMOVE WALLPAPER</string>
-    <string name="settings">SETTINGS</string>
+    <string name="scheduler">SCEDULER</string>
 </resources>

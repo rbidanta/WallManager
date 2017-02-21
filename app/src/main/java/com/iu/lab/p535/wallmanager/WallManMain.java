@@ -80,12 +80,6 @@ public class WallManMain extends AppCompatActivity {
 
     }
 
-    public void appSettings(View view) {
-
-
-    }
-
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         System.out.println(" In Activity Result");
@@ -180,6 +174,11 @@ public class WallManMain extends AppCompatActivity {
                 .setObject(object)
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
+    }
+
+    public void onClickScheduler(View view) {
+        Intent intent = new Intent(this, Scheduler.class);
+        
     }
 
     @Override
