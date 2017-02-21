@@ -5,7 +5,7 @@ package com.iu.lab.p535.wallmanager;
 public class Image {
 
     private int imageID;
-    private String path;
+    private String uriString;
 
     public int getImageID() {
         return imageID;
@@ -16,11 +16,11 @@ public class Image {
     }
 
     public String getPath() {
-        return path;
+        return uriString;
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.uriString = path;
     }
 
     public Image(){}

@@ -48,6 +48,8 @@ public class AddWallpaper extends AppCompatActivity {
 
                 imageURIList = intent.getStringArrayListExtra(WallManMain.IMAGE_URI_LIST);
 
+                final  ArrayList<String> imageURIs = imageURIList;
+
                 if(checkPermissionREAD_EXTERNAL_STORAGE(this)) {
 
                     imageViewList = new ArrayList<ImageView>();
@@ -60,7 +62,7 @@ public class AddWallpaper extends AppCompatActivity {
                         imageView.setImageBitmap(bitmap);
                         imageView.setLayoutParams(new GridView.LayoutParams(160, 160));
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        imageView.setPadding(8, 8, 8, 8);
+                        imageView.setPadding(10, 10, 10, 10);
                         imageViewList.add(imageView);
 
                         //ViewGroup layout = (ViewGroup) findViewById(R.id.activity_add_wallpaper);
@@ -75,12 +77,14 @@ public class AddWallpaper extends AppCompatActivity {
                                                 int position, long id) {
                             Toast.makeText(AddWallpaper.this, "" + position,
                                     Toast.LENGTH_SHORT).show();
+
+                            System.out.println("Get Image URI:"+ imageURIs.get(position));
+
+                            v.setEnabled(false);
+
                         }
                     });
-
-
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();

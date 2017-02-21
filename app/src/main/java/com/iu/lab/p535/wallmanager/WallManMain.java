@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class WallManMain extends AppCompatActivity {
 
     private int PICK_IMAGE_REQUEST = 2;
+    private int REMOVE_IMAGE_REQUEST = 3;
     public static final String IMAGE_URI_LIST = "LIST_OF_SELECTED_IMAGE_URIS";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -65,7 +67,15 @@ public class WallManMain extends AppCompatActivity {
         System.out.println("addWallpaper 2");
     }
 
-    public void takePicture(View view) {
+    public void removeImages(View view) {
+
+        System.out.println("Inside Remove Images");
+
+
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(intent, REMOVE_IMAGE_REQUEST);
 
 
     }
@@ -111,9 +121,46 @@ public class WallManMain extends AppCompatActivity {
 
             // Add the Images URI to the database
 
-            Intent intent = new Intent(this, AddWallpaper.class);
+            ImageDBHandler imageDBHandler = new ImageDBHandler(this);
+
+            for(int imageCounter = 0 ; imageCounter < uri_Al.size(); imageCounter++) {
+
+                Image image = new Image();
+
+                image.setPath(uri_Al.get(imageCounter));
+
+                imageDBHandler.addImage(image);
+
+
+            }
+
+            Toast.makeText(WallManMain.this, "Hurray!! Selected Images Addedd to Wallpaper Gallery!!",
+                    Toast.LENGTH_SHORT).show();
+
+            /*Intent intent = new Intent(this, AddWallpaper.class);
             intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
-            startActivity(intent);
+            startActivity(intent);*/
+
+        }else if(requestCode == REMOVE_IMAGE_REQUEST && resultCode == RESULT_OK){
+
+
+            ArrayList<String> uri_Al = null;
+
+            ImageDBHandler imageDBHandler = new ImageDBHandler(this);
+
+            uri_Al = imageDBHandler.fetchImages();
+
+            if(null != uri_Al) {
+
+                Intent intent = new Intent(this,RemoveWallPaper.class);
+                intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
+                startActivity(intent);
+            }else{
+
+                Toast.makeText(WallManMain.this, "Error Occured Fetching Images",
+                        Toast.LENGTH_SHORT).show();
+
+            }
 
         }
     }

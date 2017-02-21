@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by jaidev on 02/19/17.
  */
@@ -26,7 +28,7 @@ public class ImageDBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Write your create string here.
         String createSQL = "CREATE TABLE " + TABLE + " (" +
-                COLUMN_IMAGE_ID + " INTEGER PRIMARY KEY, "+
+                COLUMN_IMAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 COLUMN_IMAGE_PATH + " TEXT)";
         db.execSQL(createSQL);
     }
@@ -39,7 +41,7 @@ public class ImageDBHandler extends SQLiteOpenHelper {
 
     public void addImage(Image image){
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_IMAGE_ID, image.getImageID());
+        //cv.put(COLUMN_IMAGE_ID, image.getImageID());
         cv.put(COLUMN_IMAGE_PATH, image.getPath());
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -49,9 +51,9 @@ public class ImageDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteImage(String path){
+    public void deleteImage(String uriString){
         String sqlQuery = "DELETE FROM "+ TABLE + " WHERE " +
-                COLUMN_IMAGE_PATH + " = \"" + path + "\"" ;
+                COLUMN_IMAGE_PATH + " = \"" + uriString + "\"" ;
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -59,6 +61,30 @@ public class ImageDBHandler extends SQLiteOpenHelper {
 
         db.close();
 
+    }
+
+    public ArrayList<String> fetchImages() {
+
+
+
+        SQLiteDatabase sDB = this.getReadableDatabase();
+
+        //String selectQuery = "SELECT * FROM " + TABLE +" WHERE " + COLUMN_IMAGE_PATH + "='" + imageUri + "'";
+
+        String selectQuery = "SELECT * FROM " + TABLE;
+
+        Cursor cursor = sDB.rawQuery(selectQuery,null);
+
+        ArrayList<String> imageArrayList = new ArrayList<String>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                imageArrayList.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return imageArrayList;
     }
 
 }
