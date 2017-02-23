@@ -50,6 +50,8 @@ public class AddWallpaper extends AppCompatActivity {
 
                 final  ArrayList<String> imageURIs = imageURIList;
 
+                System.out.println("Slected URIs"+ imageURIList.size());
+
                 if(checkPermissionREAD_EXTERNAL_STORAGE(this)) {
 
                     imageViewList = new ArrayList<ImageView>();
@@ -68,7 +70,7 @@ public class AddWallpaper extends AppCompatActivity {
                         //ViewGroup layout = (ViewGroup) findViewById(R.id.activity_add_wallpaper);
                         //layout.addView(imageView);
                     }
-
+                    System.out.println("Number of Image Views"+ imageViewList.size());
                     GridView imageGridView = (GridView)findViewById(R.id.imagesgridview);
                     imageGridView.setAdapter(new ImageViewAdaptor(this,imageViewList));
 

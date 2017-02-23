@@ -132,9 +132,9 @@ public class RemoveWallPaper extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
 
-                        getApplication().grantUriPermission(getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        getApplicationContext().grantUriPermission(getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         //final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        getApplicationContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                         ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
                         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
@@ -177,7 +177,7 @@ public class RemoveWallPaper extends AppCompatActivity {
 
             }
 
-            imageGridView = (GridView)findViewById(R.id.imagesgridview);
+            imageGridView = (GridView)findViewById(R.id.imagesgridview1);
             imageGridView.setAdapter(new ImageViewAdaptor(context,imageViewList));
 
             imageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

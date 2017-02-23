@@ -11,7 +11,7 @@
     tools:context="com.iu.lab.p535.wallmanager.AddWallpaper">
 
 
-  <!--  <GridView
+  <GridView
         android:id="@+id/imagesgridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +22,7 @@
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
-    </GridView>-->
+    </GridView>
 
 
 

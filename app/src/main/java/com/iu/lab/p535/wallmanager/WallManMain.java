@@ -84,6 +84,7 @@ public class WallManMain extends AppCompatActivity {
 
         Intent intent = new Intent(this,RemoveWallPaper.class);
         //intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.setFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
