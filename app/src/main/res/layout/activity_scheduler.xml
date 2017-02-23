@@ -38,7 +38,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/num"
-        android:text="Enter time in seconds"
+        android:hint="Enter time in seconds"
         android:textSize="14sp"
         android:layout_below="@+id/textView2"
         android:layout_alignStart="@+id/textView2" />

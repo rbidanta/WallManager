@@ -83,6 +83,7 @@ public class ImageDBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        sDB.close();
 
         return imageArrayList;
     }

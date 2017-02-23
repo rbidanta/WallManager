@@ -1,7 +1,15 @@
 package com.iu.lab.p535.wallmanager;
 
 import android.app.WallpaperManager;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
@@ -10,64 +18,99 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Scheduler extends AppCompatActivity {
 
     //private TextView switchStatus;
-    private Switch mySwitch;
+    private Switch wallManSwitch;
+    private EditText schedule;
 
+    Context context = this;
     Timer mytimer;
     int interval;
-    Drawable drawable;
     WallpaperManager myWallpaperManager;
-    int prev=1;
+
+    ArrayList<String> uriList = null;
+
+            Intent intent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scheduler);
 
-        EditText num = (EditText) findViewById(R.id.num);
-        int time = Integer.parseInt(num.getText().toString());
-        interval = time*1000;
 
-        //switchStatus = (TextView) findViewById(R.id.);
-        mySwitch = (Switch) findViewById(R.id.switch1);
 
-        //set the switch to ON
-        mySwitch.setChecked(true);
-        //attach a listener to check for changes in state
-        mySwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        intent = getIntent();
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
+       // final ArrayList<Uri> contentUri = intent.getParcelableArrayListExtra(WallManMain.IMAGE_URI_LIST);
 
-                if(isChecked){
-                    //switchStatus.setText("Switch is currently ON");
-                    mySwitch.setText("Turn off Wallpaper Changer");
-                }else{
-                    //switchStatus.setText("Switch is currently OFF");
-                    mySwitch.setText("Turn on Wallpaper Changer");
-                }
+       // System.out.println("Content Uris"+ contentUri.size());
 
-            }
-        });
+        uriList = intent.getStringArrayListExtra(WallManMain.IMAGE_URI_LIST);
 
-        mytimer=new Timer();
-        myWallpaperManager=WallpaperManager.getInstance(Scheduler.this);
+        {
 
-        //check the current state before we display the screen
-        if(mySwitch.isChecked()){
-            //switchStatus.setText("Switch is currently ON");
-            try {
-                //myWallpaperManager.setResource(R.drawable.one);
-                mytimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
+
+
+            wallManSwitch = (Switch) findViewById(R.id.switch1);
+
+
+            //attach a listener to check for changes in state
+            wallManSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,
+                                             boolean isChecked) {
+
+                    if(isChecked){
+                        //switchStatus.setText("Switch is currently ON");
+
+                        wallManSwitch.setText("Turn off Wallpaper Changer");
+
+                        schedule = (EditText) findViewById(R.id.num);
+                        if(null != schedule.getText()) {
+                            int time = Integer.parseInt(schedule.getText().toString());
+                            interval = time * 1000;
+                        }
+                        System.out.println("Interval:"+interval);
+
+                        mytimer=new Timer();
+                        myWallpaperManager=WallpaperManager.getInstance(Scheduler.this);
+
+                        //ImageDBHandler imageDBHandler = new ImageDBHandler(context);
+
+
+
+
+                        try {
+                            //myWallpaperManager.setResource(R.drawable.one);
+
+                            for (String uri: uriList) {
+
+                                intent.setData(Uri.parse(uri));
+                                Uri curi = Uri.parse(intent.getData().toString());
+                                getContentResolver().takePersistableUriPermission(curi,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(curi));
+                                myWallpaperManager.setBitmap(bitmap);
+                                Thread.sleep(interval);
+
+
+                            }
+
+
+
+                            mytimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
 
                        /* if(prev==1){
                             //drawable = getResources().getDrawable(R.drawable.two);
@@ -105,23 +148,111 @@ public class Scheduler extends AppCompatActivity {
                                 e.printStackTrace();
                             }*/
 
-                    }
-                }, 100, interval);
+                                }
+                            }, 100, interval);
 
 
-            } /*catch (IOException e) {
+                        } /*catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }*/
-            catch (Exception e) {
+                        catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+
+
+
+
+
+                    }else{
+                        //switchStatus.setText("Switch is currently OFF");
+
+
+
+                        wallManSwitch.setText("Turn on Wallpaper Changer");
+
+                        mytimer.cancel();
+
+                    }
+
+                }
+            });
+
+            mytimer=new Timer();
+            //myWallpaperManager=WallpaperManager.getInstance(Scheduler.this);
+
+            //check the current state before we display the screen
+            if(wallManSwitch.isChecked()){
+                System.out.println("If the switch is ON");
+                //switchStatus.setText("Switch is currently ON");
+                try {
+                    //myWallpaperManager.setResource(R.drawable.one);
+                    mytimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+
+                       /* if(prev==1){
+                            //drawable = getResources().getDrawable(R.drawable.two);
+                            try {
+                                myWallpaperManager.setResource(R.drawable.two);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            prev=2;
+                        }
+                        else if(prev==2){
+                            try {
+                                myWallpaperManager.setResource(R.drawable.three);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            prev=3;
+                        }
+                        else{
+                            try {
+                                myWallpaperManager.setResource(R.drawable.four);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            prev=1;
+                        }*/
+
+
+                           /* Bitmap wallpaper=((BitmapDrawable)drawable).getBitmap();
+
+                            try {
+                                myWallpaperManager.setBitmap(wallpaper);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }*/
+
+                        }
+                    }, 100, interval);
+
+
+                } /*catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            }*/
+                catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            else {
+                //switchStatus.setText("Switch is currently OFF");
+                mytimer.cancel();
             }
         }
-        else {
-            //switchStatus.setText("Switch is currently OFF");
-            mytimer.cancel();
-        }
+
+
+
 
     }
+
+
+
 }

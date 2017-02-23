@@ -2,6 +2,7 @@ package com.iu.lab.p535.wallmanager;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,6 +41,10 @@ public class RemoveWallPaper extends AppCompatActivity {
 
     ArrayList<Bitmap> bitmapArrayList = null;
 
+    Intent intent = null;
+
+    ContentResolver cresolver = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +55,9 @@ public class RemoveWallPaper extends AppCompatActivity {
 
         //Bitmap image= imageView.getDrawingCache();
 
-        Intent intent = getIntent();
+        intent = getIntent();
+
+
        // intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         ArrayList<String> imageURIList  = null;
 
@@ -107,6 +114,8 @@ public class RemoveWallPaper extends AppCompatActivity {
 
                     Uri uri = Uri.parse(uri_Al.get(i));
 
+                    intent.setData(uri);
+
                         /*getApplicationContext().grantUriPermission(getApplicationContext().getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         //final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         getApplicationContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -123,11 +132,11 @@ public class RemoveWallPaper extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
 
+                        getApplication().grantUriPermission(getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        //final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        getApplicationContext().grantUriPermission(getApplicationContext().getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        //getApplicationContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        ParcelFileDescriptor parcelFileDescriptor =
-                                getContentResolver().openFileDescriptor(uri, "r");
+                        ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
                         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
                         bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                         bitmapArrayList.add(bitmap);
