@@ -2,25 +2,22 @@ package com.iu.lab.p535.wallmanager;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -28,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.FileDescriptor;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class RemoveWallPaper extends AppCompatActivity {
@@ -41,10 +37,6 @@ public class RemoveWallPaper extends AppCompatActivity {
 
     ArrayList<Bitmap> bitmapArrayList = null;
 
-    Intent intent = null;
-
-    ContentResolver cresolver = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +47,7 @@ public class RemoveWallPaper extends AppCompatActivity {
 
         //Bitmap image= imageView.getDrawingCache();
 
-        intent = getIntent();
-
-
+        Intent intent = getIntent();
        // intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         ArrayList<String> imageURIList  = null;
 
@@ -114,8 +104,6 @@ public class RemoveWallPaper extends AppCompatActivity {
 
                     Uri uri = Uri.parse(uri_Al.get(i));
 
-                    intent.setData(uri);
-
                         /*getApplicationContext().grantUriPermission(getApplicationContext().getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         //final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         getApplicationContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -132,11 +120,11 @@ public class RemoveWallPaper extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
 
-                        getApplicationContext().grantUriPermission(getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        //final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getApplicationContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
+                        getApplicationContext().grantUriPermission(getApplicationContext().getPackageName(),uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        //getApplicationContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        ParcelFileDescriptor parcelFileDescriptor =
+                                getContentResolver().openFileDescriptor(uri, "r");
                         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
                         bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                         bitmapArrayList.add(bitmap);
@@ -177,7 +165,7 @@ public class RemoveWallPaper extends AppCompatActivity {
 
             }
 
-            imageGridView = (GridView)findViewById(R.id.imagesgridview1);
+            imageGridView = (GridView)findViewById(R.id.imagesgridview);
             imageGridView.setAdapter(new ImageViewAdaptor(context,imageViewList));
 
             imageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -207,7 +195,7 @@ public class RemoveWallPaper extends AppCompatActivity {
             System.out.println("chkExtStrPermission"+chkExtStrPermission);
             int chkManDocPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.MANAGE_DOCUMENTS);
             System.out.println("chkManDocPermission"+chkManDocPermission);
-            if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (currentAPIVersion >= Build.VERSION_CODES.M) {
                 System.out.println("Permission2");
                 if ( chkExtStrPermission != PackageManager.PERMISSION_GRANTED || chkManDocPermission != PackageManager.PERMISSION_GRANTED) {
                     System.out.println("Permission3");

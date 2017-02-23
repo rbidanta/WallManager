@@ -9,16 +9,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -50,8 +48,6 @@ public class AddWallpaper extends AppCompatActivity {
 
                 final  ArrayList<String> imageURIs = imageURIList;
 
-                System.out.println("Slected URIs"+ imageURIList.size());
-
                 if(checkPermissionREAD_EXTERNAL_STORAGE(this)) {
 
                     imageViewList = new ArrayList<ImageView>();
@@ -70,7 +66,7 @@ public class AddWallpaper extends AppCompatActivity {
                         //ViewGroup layout = (ViewGroup) findViewById(R.id.activity_add_wallpaper);
                         //layout.addView(imageView);
                     }
-                    System.out.println("Number of Image Views"+ imageViewList.size());
+
                     GridView imageGridView = (GridView)findViewById(R.id.imagesgridview);
                     imageGridView.setAdapter(new ImageViewAdaptor(this,imageViewList));
 
@@ -100,7 +96,7 @@ public class AddWallpaper extends AppCompatActivity {
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(
             final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+        if (currentAPIVersion >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context,
                     Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(

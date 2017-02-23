@@ -1,17 +1,12 @@
 package com.iu.lab.p535.wallmanager;
 
 import android.content.ClipData;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.drm.DrmStore;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -19,10 +14,6 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 
@@ -31,7 +22,6 @@ public class WallManMain extends AppCompatActivity {
     private int PICK_IMAGE_REQUEST = 2;
     private int REMOVE_IMAGE_REQUEST = 3;
     public static final String IMAGE_URI_LIST = "LIST_OF_SELECTED_IMAGE_URIS";
-    public static final String IMAGE_CURI_LIST = "LIST_OF_SELECTED_IMAGE_CURIS";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -77,14 +67,13 @@ public class WallManMain extends AppCompatActivity {
         System.out.println("Inside Remove Images");
 
 
-//          Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//          intent.addCategory(Intent.CATEGORY_OPENABLE);
-//          intent.setType("*/*");
-//          startActivityForResult(intent, REMOVE_IMAGE_REQUEST);
+        //Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        //intent.addCategory(Intent.CATEGORY_OPENABLE);
+        //intent.setType("**/*//*");
+        //startActivityForResult(intent, REMOVE_IMAGE_REQUEST);
 
         Intent intent = new Intent(this,RemoveWallPaper.class);
         //intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.setFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -106,22 +95,6 @@ public class WallManMain extends AppCompatActivity {
             if (null != data.getData()) {
 
                 Uri uri = data.getData();
-
-                //getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-//                System.out.println(" URI : "+uri.toString());
-//                System.out.println(" Path: "+uri.getPath());
-//
-//                try {
-//                    File file = new File(new URI(uri.getPath()));
-//
-//                    System.out.println(" Absolute File Path: "+file.getAbsolutePath());
-//
-//
-//                } catch (URISyntaxException e) {
-//                    e.printStackTrace();
-//                }
-
 
                 uri_Al.add(uri.toString());
 
@@ -149,21 +122,22 @@ public class WallManMain extends AppCompatActivity {
             for(int imageCounter = 0 ; imageCounter < uri_Al.size(); imageCounter++) {
 
                 Image image = new Image();
+
                 image.setPath(uri_Al.get(imageCounter));
+
                 imageDBHandler.addImage(image);
 
 
             }
 
-            Toast.makeText(WallManMain.this, "Hurray!! Selected Images Added to Wallpaper Gallery!!",
+            Toast.makeText(WallManMain.this, "Hurray!! Selected Images Addedd to Wallpaper Gallery!!",
                     Toast.LENGTH_SHORT).show();
 
             /*Intent intent = new Intent(this, AddWallpaper.class);
             intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
             startActivity(intent);*/
 
-        }
-        else if(requestCode == REMOVE_IMAGE_REQUEST && resultCode == RESULT_OK){
+        }else if(requestCode == REMOVE_IMAGE_REQUEST && resultCode == RESULT_OK){
 
 
             ArrayList<String> uri_Al = null;
@@ -175,9 +149,6 @@ public class WallManMain extends AppCompatActivity {
             if(null != uri_Al) {
 
                 Intent intent = new Intent(this,RemoveWallPaper.class);
-                intent.setFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
                 startActivity(intent);
             }else{
@@ -236,7 +207,7 @@ public class WallManMain extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.putStringArrayListExtra(IMAGE_URI_LIST, uri_Al);
-       // intent.putParcelableArrayListExtra(IMAGE_CURI_LIST,contentUri);
+        // intent.putParcelableArrayListExtra(IMAGE_CURI_LIST,contentUri);
         startActivity(intent);
     }
 

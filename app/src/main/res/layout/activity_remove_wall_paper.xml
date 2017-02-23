@@ -12,7 +12,7 @@
 
 
     <GridView
-        android:id="@+id/imagesgridview1"
+        android:id="@+id/imagesgridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnWidth="90dp"
